@@ -16,6 +16,22 @@ def enter_operator(x):
         entry_box.insert(length, btn_operator[x]['text'])
 
 
+def clear():
+    entry_box.delete(0, END)
+    entry_box.insert(0, 'O')
+
+
+def result():
+    pass
+
+
+def func_delete():
+    length = len(entry_box.get())
+    entry_box.delete(length - 1, 'end')
+    if length == 1:
+        entry_box.insert(0, 'O')
+
+
 root = Tk()
 root.title('Calculator')
 root.geometry('380x550+850+100')
@@ -46,5 +62,18 @@ btn_operator[3]['text'] = '/'
 
 for i in range(4):
     btn_operator[i].place(x=290, y=70 + i * 70)
+
+btn_zero = Button(width=19, text='0', font='times 15 bold', bd=5, command=lambda x=0: enter_number(x))
+btn_clear = Button(width=4, text='C', font='times 15 bold', bd=5, command=clear)
+btn_zero.place(x=25, y=280)
+btn_clear.place(x=25, y=340)
+btn_dot = Button(width=4, text='.', font='times 15 bold', bd=5, command=lambda x='.': enter_number(x))
+btn_dot.place(x=110, y=340)
+btn_equal = Button(width=4, text='=', font='times 15 bold', bd=5, command=result)
+btn_equal.place(x=200, y=340)
+icon = PhotoImage(file='icons/arrow.png')
+btn_delete = Button(width=50, height=35, font='times 15 bold', bd=5, command=func_delete, image=icon)
+btn_delete.place(x=290, y=340)
+
 
 root.mainloop()
