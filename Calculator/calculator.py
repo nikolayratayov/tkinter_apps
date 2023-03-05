@@ -1,6 +1,9 @@
 from tkinter import *
 
 
+ops = ['+', '-', '*', '/']
+
+
 def enter_number(x):
     if entry_box.get() == 'O':
         entry_box.delete(0, 'end')
@@ -13,6 +16,8 @@ def enter_number(x):
 def enter_operator(x):
     if entry_box.get() != 'O':
         length = len(entry_box.get())
+        if entry_box.get()[-1] in ops:
+            entry_box.delete(length - 1)
         entry_box.insert(length, btn_operator[x]['text'])
 
 
@@ -21,8 +26,19 @@ def clear():
     entry_box.insert(0, 'O')
 
 
+res_list = []
+
+
 def result():
-    pass
+    if entry_box.get()[-1] in ops:
+        entry_box.delete(len(entry_box.get()) - 1)
+    content = entry_box.get()
+    res = eval(content)
+    entry_box.delete(0, END)
+    entry_box.insert(0, str(res))
+    res_list.append(content)
+    res_list.reverse()
+    status_bar.configure(text='History: ' + ' | '.join(res_list[:5]), font='verdana 10 bold')
 
 
 def func_delete():
@@ -35,6 +51,7 @@ def func_delete():
 root = Tk()
 root.title('Calculator')
 root.geometry('380x550+850+100')
+root.resizable(False, False)
 
 entry_box = Entry(font='verdana 14 bold', width=22, bd=10, justify=RIGHT, bg='#e6e6fa')
 entry_box.insert(0, 'O')
@@ -75,5 +92,7 @@ icon = PhotoImage(file='icons/arrow.png')
 btn_delete = Button(width=50, height=35, font='times 15 bold', bd=5, command=func_delete, image=icon)
 btn_delete.place(x=290, y=340)
 
+status_bar = Label(root, text='History: ', relief=SUNKEN, height=3, anchor=W, font='verdana 11 bold')
+status_bar.pack(side=BOTTOM, fill=X)
 
 root.mainloop()
