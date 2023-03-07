@@ -24,6 +24,24 @@ class Application(object):
         self.date_lbl = Label(self.top, text='Today\'s date: ' + str(date), font='arial 12 bold', bg='white', fg='#ffa500')
         self.date_lbl.place(x=450, y=5)
 
+        # First Button
+        self.btn1_icon = PhotoImage(file='icons/man.png')
+        self.person_btn = Button(self.bottom, text='   My people    ', font='arial 12 bold')
+        self.person_btn.config(image=self.btn1_icon, compound=LEFT)
+        self.person_btn.place(x=250, y=10)
+
+        # Second Button
+        self.btn2_icon = PhotoImage(file='icons/add.png')
+        self.person_btn = Button(self.bottom, text='  Add Person  ', font='arial 12 bold')
+        self.person_btn.config(image=self.btn2_icon, compound=LEFT)
+        self.person_btn.place(x=250, y=70)
+
+        # Third Button
+        self.btn3_icon = PhotoImage(file='icons/info.png')
+        self.person_btn = Button(self.bottom, text='  About us       ', font='arial 12 bold')
+        self.person_btn.config(image=self.btn3_icon, compound=LEFT)
+        self.person_btn.place(x=250, y=130)
+
 
 def main():
     root = Tk()
