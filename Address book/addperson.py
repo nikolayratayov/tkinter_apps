@@ -1,5 +1,6 @@
 from tkinter import *
 import sqlite3
+from tkinter import messagebox
 
 
 con = sqlite3.connect('database.db')
@@ -30,25 +31,25 @@ class AddPerson(Toplevel):
         self.lbl_name = Label(self.bottom, text='Name', font='arial 15 bold', fg='white', bg='#fcc324')
         self.lbl_name.place(x=40, y=40)
         self.ent_name = Entry(self.bottom, width=30, bd=4)
-        self.ent_name.insert(0, 'Please enter a name')
+        # self.ent_name.insert(0, 'Please enter a name')
         self.ent_name.place(x=150, y=45)
 
         self.lbl_surname = Label(self.bottom, text='Surname', font='arial 15 bold', fg='white', bg='#fcc324')
         self.lbl_surname.place(x=40, y=80)
         self.ent_surname = Entry(self.bottom, width=30, bd=4)
-        self.ent_surname.insert(0, 'Please enter a surname')
+        # self.ent_surname.insert(0, 'Please enter a surname')
         self.ent_surname.place(x=150, y=85)
 
         self.lbl_email = Label(self.bottom, text='Email', font='arial 15 bold', fg='white', bg='#fcc324')
         self.lbl_email.place(x=40, y=120)
         self.ent_email = Entry(self.bottom, width=30, bd=4)
-        self.ent_email.insert(0, 'Please enter an email')
+        # self.ent_email.insert(0, 'Please enter an email')
         self.ent_email.place(x=150, y=125)
 
         self.lbl_phone = Label(self.bottom, text='Phone', font='arial 15 bold', fg='white', bg='#fcc324')
         self.lbl_phone.place(x=40, y=160)
         self.ent_phone = Entry(self.bottom, width=30, bd=4)
-        self.ent_phone.insert(0, 'Please enter a phone number')
+        # self.ent_phone.insert(0, 'Please enter a phone number')
         self.ent_phone.place(x=150, y=165)
 
         self.lbl_address = Label(self.bottom, text='Address', font='arial 15 bold', fg='white', bg='#fcc324')
@@ -56,5 +57,24 @@ class AddPerson(Toplevel):
         self.address = Text(self.bottom, width=23, height=15, wrap=WORD)
         self.address.place(x=150, y=200)
 
-        button = Button(self.bottom, text='Add person')
+        button = Button(self.bottom, text='Add person', command=self.add_person)
         button.place(x=270, y=460)
+
+    def add_person(self):
+        name = self.ent_name.get()
+        surname = self.ent_surname.get()
+        email = self.ent_email.get()
+        phone = self.ent_phone.get()
+        address = self.address.get(1.0, 'end-1c')
+
+        if name and surname and email and phone and address:
+            try:
+                query = "INSERT INTO 'people' (person_name, person_surname, person_email, person_phone, person_address)" \
+                        "VALUES(?,?,?,?,?)"
+                cur.execute(query, (name, surname, email, phone, address))
+                con.commit()
+                messagebox.showinfo('Success', 'Successfully added to database!', icon='info')
+            except:
+                messagebox.showerror('Error', 'Can\'t add to database', icon='warning')
+        else:
+            messagebox.showerror('Error', 'Fields can\'t be empty!')
