@@ -37,11 +37,17 @@ class MyPeople(Toplevel):
         self.list_box.config(yscrollcommand=self.sb.set)
         self.sb.grid(row=0, column=1, sticky=N+S)
 
+        people = cur.execute("SELECT * FROM people").fetchall()
+        counter = 0
+        for person in people:
+            self.list_box.insert(counter, str(person[0]) + '-' + person[1] + ' ' + person[2])
+            counter += 1
+
         # Buttons
         btn_add = Button(self.bottom, text='Add', width=12, font='Sans 12 bold', command=self.add_person)
         btn_add.grid(row=0, column=2, sticky=N, padx=10, pady=10)
 
-        btn_update = Button(self.bottom, text='Update', width=12, font='Sans 12 bold')
+        btn_update = Button(self.bottom, text='Update', width=12, font='Sans 12 bold', command=self.update)
         btn_update.grid(row=0, column=2, sticky=N, padx=10, pady=50)
 
         btn_display = Button(self.bottom, text='Display', width=12, font='Sans 12 bold')
@@ -52,3 +58,29 @@ class MyPeople(Toplevel):
 
     def add_person(self):
         add_page = addperson.AddPerson()
+        self.destroy()
+
+    def update(self):
+        global person_id
+        selected_item = self.list_box.curselection()
+        person = self.list_box.get(selected_item)
+        person_id = person.split('-')[0]
+        update_page = Update()
+
+
+class Update(Toplevel):
+    def __init__(self):
+        Toplevel.__init__(self)
+        self.geometry('650x750+550+100')
+        self.title('Update person')
+        self.resizable(False, False)
+
+        # get person from db
+        person = cur.execute("SELECT * from people WHERE person_id =?", (person_id,))
+        person_info = person.fetchall()
+        self.person_id = person_info[0][0]
+        self.person_name = person_info[0][1]
+        self.person_surname = person_info[0][2]
+        self.person_email = person_info[0][3]
+        self.person_phone = person_info[0][4]
+        self.person_address = person_info[0][5]
