@@ -51,7 +51,7 @@ class MyPeople(Toplevel):
         btn_update = Button(self.bottom, text='Update', width=12, font='Sans 12 bold', command=self.update)
         btn_update.grid(row=0, column=2, sticky=N, padx=10, pady=50)
 
-        btn_display = Button(self.bottom, text='Display', width=12, font='Sans 12 bold')
+        btn_display = Button(self.bottom, text='Display', width=12, font='Sans 12 bold', command=self.display)
         btn_display.grid(row=0, column=2, sticky=N, padx=10, pady=90)
 
         btn_delete = Button(self.bottom, text='Delete', width=12, font='Sans 12 bold')
@@ -67,6 +67,14 @@ class MyPeople(Toplevel):
         person = self.list_box.get(selected_item)
         person_id = person.split('-')[0]
         update_page = Update()
+
+    def display(self):
+        global person_id
+        selected_item = self.list_box.curselection()
+        person = self.list_box.get(selected_item)
+        person_id = person.split('-')[0]
+        display_page = Display()
+        self.destroy()
 
 
 class Update(Toplevel):
@@ -152,3 +160,68 @@ class Update(Toplevel):
                 messagebox.showinfo('Warning', 'Person has not been updated!', icon='warning')
         else:
             messagebox.showinfo('Warning', 'Fields can\'t be empty!', icon='warning')
+
+
+class Display(Toplevel):
+    def __init__(self):
+        Toplevel.__init__(self)
+        self.geometry('650x650+550+100')
+        self.title('Display Person')
+        self.resizable(False, False)
+
+        person = cur.execute("SELECT * from people WHERE person_id =?", (person_id,))
+        person_info = person.fetchall()
+        self.person_id = person_info[0][0]
+        self.person_name = person_info[0][1]
+        self.person_surname = person_info[0][2]
+        self.person_email = person_info[0][3]
+        self.person_phone = person_info[0][4]
+        self.person_address = person_info[0][5]
+
+        self.top = Frame(self, height=150, bg='white')
+        self.top.pack(fill=X)
+        self.bottom = Frame(self, height=500, bg='#fcc324')
+        self.bottom.pack(fill=X)
+
+        # Heading, image and date
+        self.top_image = PhotoImage(file='icons/addperson.png')
+        self.top_image_lbl = Label(self.top, image=self.top_image, bg='white')
+        self.top_image_lbl.place(x=120, y=10)
+        self.heading = Label(self.top, text='My People', font='arial 15 bold', fg='#003f8a', bg='white')
+        self.heading.place(x=260, y=60)
+
+        # Labels and entries
+        self.lbl_name = Label(self.bottom, text='Name', font='arial 15 bold', fg='white', bg='#fcc324')
+        self.lbl_name.place(x=40, y=40)
+        self.ent_name = Entry(self.bottom, width=30, bd=4)
+        self.ent_name.insert(0, self.person_name)
+        self.ent_name.config(state='disabled')
+        self.ent_name.place(x=150, y=45)
+
+        self.lbl_surname = Label(self.bottom, text='Surname', font='arial 15 bold', fg='white', bg='#fcc324')
+        self.lbl_surname.place(x=40, y=80)
+        self.ent_surname = Entry(self.bottom, width=30, bd=4)
+        self.ent_surname.insert(0, self.person_surname)
+        self.ent_surname.config(state='disabled')
+        self.ent_surname.place(x=150, y=85)
+
+        self.lbl_email = Label(self.bottom, text='Email', font='arial 15 bold', fg='white', bg='#fcc324')
+        self.lbl_email.place(x=40, y=120)
+        self.ent_email = Entry(self.bottom, width=30, bd=4)
+        self.ent_email.insert(0, self.person_email)
+        self.ent_email.config(state='disabled')
+        self.ent_email.place(x=150, y=125)
+
+        self.lbl_phone = Label(self.bottom, text='Phone', font='arial 15 bold', fg='white', bg='#fcc324')
+        self.lbl_phone.place(x=40, y=160)
+        self.ent_phone = Entry(self.bottom, width=30, bd=4)
+        self.ent_phone.insert(0, self.person_phone)
+        self.ent_phone.config(state='disabled')
+        self.ent_phone.place(x=150, y=165)
+
+        self.lbl_address = Label(self.bottom, text='Address', font='arial 15 bold', fg='white', bg='#fcc324')
+        self.lbl_address.place(x=40, y=300)
+        self.address = Text(self.bottom, width=23, height=15, wrap=WORD)
+        self.address.insert('1.0', self.person_address)
+        self.address.config(state='disabled')
+        self.address.place(x=150, y=200)
