@@ -10,7 +10,7 @@ cur = con.cursor()
 class AddPerson(Toplevel):
     def __init__(self):
         Toplevel.__init__(self)
-        self.geometry('650x750+550+100')
+        self.geometry('650x650+550+100')
         self.title('Add Person')
         self.resizable(False, False)
 
@@ -74,6 +74,7 @@ class AddPerson(Toplevel):
                 cur.execute(query, (name, surname, email, phone, address))
                 con.commit()
                 messagebox.showinfo('Success', 'Successfully added to database!', icon='info')
+                self.destroy()
             except:
                 messagebox.showerror('Error', 'Can\'t add to database', icon='warning')
         else:
