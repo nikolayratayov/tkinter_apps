@@ -23,10 +23,29 @@ class Main:
         center_right_frame.pack()
         # search bar
         search_bar = LabelFrame(center_right_frame, width=440, height=75, text='Search box', bg='#9bc9ff')
-        search_bar.pack()
+        search_bar.pack(fill=X)
+        lbl_search = Label(search_bar, text='Search', font='aral 12 bold', bg='#9bc9ff', fg='white')
+        lbl_search.grid(row=0, column=0, padx=20, pady=10)
+        ent_search = Entry(search_bar, width=30, bd=5)
+        ent_search.grid(row=0, column=1, columnspan=3, padx=10, pady=10)
+        btn_search = Button(search_bar, text='Search', font='arial 12', bg='#fcc324', fg='white')
+        btn_search.grid(row=0, column=4, padx=20, pady=10)
+
         # list bar
         list_bar = LabelFrame(center_right_frame, width=440, height=175, text='List box', bg='#fcc324')
-        list_bar.pack()
+        list_bar.pack(fill=X)
+        lbl_list = Label(list_bar, text='Sort by', font='times 16 bold', fg='#2488ff', bg='#fcc324')
+        lbl_list.grid(row=0, column=2)
+        self.list_choice = IntVar()
+        rb1 = Radiobutton(list_bar, text='All books', var=self.list_choice, value=1, bg='#fcc324')
+        rb2 = Radiobutton(list_bar, text='In library', var=self.list_choice, value=2, bg='#fcc324')
+        rb3 = Radiobutton(list_bar, text='Borrowed books', var=self.list_choice, value=3, bg='#fcc324')
+        rb1.grid(row=1, column=0)
+        rb2.grid(row=1, column=1)
+        rb3.grid(row=1, column=2)
+        btn_list = Button(list_bar, text='List books', bg='#2488ff', fg='white', font='arial 12')
+        btn_list.grid(row=1, column=3, padx=40, pady=10)
+
         # add book
         self.icon_book = PhotoImage(file='icons/add_book.png')
         self.btn_book = Button(top_frame, text='Add Book', image=self.icon_book, compound=LEFT, font='arial 12 bold')
