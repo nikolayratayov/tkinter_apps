@@ -46,6 +46,16 @@ class Main:
         btn_list = Button(list_bar, text='List books', bg='#2488ff', fg='white', font='arial 12')
         btn_list.grid(row=1, column=3, padx=40, pady=10)
 
+        # title and image
+        image_bar = Frame(center_right_frame, width=440, height=350)
+        image_bar.pack(fill=BOTH)
+        self.title_right = Label(image_bar, text='Welcome to our library', font='arial 16 bold')
+        self.title_right.grid(row=0)
+        self.img_library = PhotoImage(file='icons/library.png')
+        self.lbl_img = Label(image_bar, image=self.img_library)
+        self.lbl_img.grid(row=1)
+
+        # Toolbar
         # add book
         self.icon_book = PhotoImage(file='icons/add_book.png')
         self.btn_book = Button(top_frame, text='Add Book', image=self.icon_book, compound=LEFT, font='arial 12 bold')
@@ -59,6 +69,37 @@ class Main:
         self.icon_give = PhotoImage(file='icons/givebook.png')
         self.btn_give = Button(top_frame, text='Give Book', image=self.icon_give, compound=LEFT, font='arial 12 bold')
         self.btn_give.pack(side=LEFT)
+
+        # Tabs
+        # Tab1
+        self.tabs = ttk.Notebook(center_left_frame, width=900, height=660)
+        self.tabs.pack()
+        self.tab1_icon = PhotoImage(file='icons/books.png')
+        self.tab2_icon = PhotoImage(file='icons/members.png')
+        self.tab1 = ttk.Frame(self.tabs)
+        self.tab2 = ttk.Frame(self.tabs)
+        self.tabs.add(self.tab1, text='Library management', image=self.tab1_icon, compound=LEFT)
+        self.tabs.add(self.tab2, text='Statistics', image=self.tab2_icon, compound=LEFT)
+
+        # List books
+        self.list_books = Listbox(self.tab1, width=40, height=25, bd=5, font='times 12 bold')
+        self.sb = Scrollbar(self.tab1, orient=VERTICAL)
+        self.list_books.grid(row=0, column=0, padx=(0, 0), pady=10, sticky=N)
+        self.sb.config(command=self.list_books.yview)
+        self.list_books.config(yscrollcommand=self.sb.set)
+        self.sb.grid(row=0, column=0, sticky=N+S+E)
+        # List details
+        self.list_details = Listbox(self.tab1, width=68, height=25, bd=5, font='times 12 bold')
+        self.list_details.grid(row=0, column=1, padx=(10, 0), pady=10, sticky=N)
+
+        # Tab2
+        # Statistics
+        self.lbl_book_count = Label(self.tab2, text='', pady=20, font='verdana 14 bold')
+        self.lbl_book_count.grid(row=0)
+        self.lbl_member_count = Label(self.tab2, text='', pady=20, font='verdana 14 bold')
+        self.lbl_member_count.grid(row=1, sticky=W)
+        self.lbl_taken_count = Label(self.tab2, text='', pady=20, font='verdana 14 bold')
+        self.lbl_taken_count.grid(row=2, sticky=W)
 
 
 def main():
