@@ -12,6 +12,29 @@ class Main:
     def __init__(self, master):
         self.master = master
 
+        def display_books(self):
+            books = cur.execute('SELECT * FROM books').fetchall()
+            count = 0
+            for book in books:
+                self.list_books.insert(count, str(book[0]) + '-' + book[1])
+                count += 1
+
+            def book_info(e):
+                value = str(self.list_books.get(self.list_books.curselection()))
+                id = value.split('-')[0]
+                book = cur.execute('SELECT * FROM books WHERE book_id=?', (id,))
+                book_information = book.fetchall()
+                self.list_details.delete(0, 'end')
+                self.list_details.insert(0, f'Book name: {book_information[0][1]}')
+                self.list_details.insert(1, f'Author: {book_information[0][2]}')
+                self.list_details.insert(2, f'Pages : {book_information[0][3]}')
+                self.list_details.insert(3, f'Language : {book_information[0][4]}')
+                if book_information[0][5] == 0:
+                    self.list_details.insert(4, 'Status : Available')
+                else:
+                    self.list_details.insert(4, 'Status : Taken')
+            self.list_books.bind('<<ListboxSelect>>', book_info)
+
         # Frames
         main_frame = Frame(self.master)
         main_frame.pack()
@@ -107,6 +130,9 @@ class Main:
         self.lbl_member_count.grid(row=1, sticky=W)
         self.lbl_taken_count = Label(self.tab2, text='', pady=20, font='verdana 14 bold')
         self.lbl_taken_count.grid(row=2, sticky=W)
+
+        # Functions
+        display_books(self)
 
     def add_book(self):
         new_book = add_book.AddBook()
