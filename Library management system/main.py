@@ -55,9 +55,9 @@ class Main:
         search_bar.pack(fill=X)
         lbl_search = Label(search_bar, text='Search', font='aral 12 bold', bg='#9bc9ff', fg='white')
         lbl_search.grid(row=0, column=0, padx=20, pady=10)
-        ent_search = Entry(search_bar, width=30, bd=5)
-        ent_search.grid(row=0, column=1, columnspan=3, padx=10, pady=10)
-        btn_search = Button(search_bar, text='Search', font='arial 12', bg='#fcc324', fg='white')
+        self.ent_search = Entry(search_bar, width=30, bd=5)
+        self.ent_search.grid(row=0, column=1, columnspan=3, padx=10, pady=10)
+        btn_search = Button(search_bar, text='Search', font='arial 12', bg='#fcc324', fg='white', command=self.search_books)
         btn_search.grid(row=0, column=4, padx=20, pady=10)
 
         # list bar
@@ -139,6 +139,15 @@ class Main:
 
     def add_member(self):
         member = add_member.AddMember()
+
+    def search_books(self):
+        value = self.ent_search.get()
+        search = cur.execute('SELECT * FROM books WHERE book_name LIKE ?', ('%' + value + '%',)).fetchall()
+        self.list_books.delete(0, 'end')
+        count = 0
+        for book in search:
+            self.list_books.insert(count, str(book[0]) + '-' + book[1])
+            count += 1
 
 
 def main():
