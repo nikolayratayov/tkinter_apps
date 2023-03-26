@@ -72,7 +72,7 @@ class Main:
         rb1.grid(row=1, column=0)
         rb2.grid(row=1, column=1)
         rb3.grid(row=1, column=2)
-        btn_list = Button(list_bar, text='List books', bg='#2488ff', fg='white', font='arial 12')
+        btn_list = Button(list_bar, text='List books', bg='#2488ff', fg='white', font='arial 12', command=self.func_list_books)
         btn_list.grid(row=1, column=3, padx=40, pady=10)
 
         # title and image
@@ -148,6 +148,20 @@ class Main:
         for book in search:
             self.list_books.insert(count, str(book[0]) + '-' + book[1])
             count += 1
+
+    def func_list_books(self):
+        value = self.list_choice.get()
+        if value == 1:
+            res_books = cur.execute('SELECT * FROM books').fetchall()
+        elif value == 2:
+            res_books = cur.execute('SELECT * FROM books WHERE book_status=?', (0,)).fetchall()
+        else:
+            res_books = cur.execute('SELECT * FROM books WHERE book_status=>', (1,)).fetchall()
+        self.list_books.delete(0, 'end')
+        counter = 0
+        for book in res_books:
+            self.list_books.insert(counter, str(book[0]) + '-' + book[1])
+            counter += 1
 
 
 def main():
