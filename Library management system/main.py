@@ -12,6 +12,14 @@ class Main:
     def __init__(self, master):
         self.master = master
 
+        def display_statistics(e):
+            count_books = cur.execute('SELECT count(book_id) FROM books').fetchall()
+            count_members = cur.execute('SELECT count(member_id) FROM members').fetchall()
+            taken_books = cur.execute('SELECT count(book_status) FROM books WHERE book_status=1').fetchall()
+            self.lbl_book_count.config(text='Total: ' + str(count_books[0][0]) + ' books in library')
+            self.lbl_member_count.config(text='Total members: ' + str(count_members[0][0]))
+            self.lbl_taken_count.config(text='Taken books: ' + str(taken_books[0][0]))
+
         def display_books(self):
             books = cur.execute('SELECT * FROM books').fetchall()
             count = 0
@@ -34,6 +42,7 @@ class Main:
                 else:
                     self.list_details.insert(4, 'Status : Taken')
             self.list_books.bind('<<ListboxSelect>>', book_info)
+            self.tabs.bind('<<NotebookTabChanged>>', display_statistics)
 
         # Frames
         main_frame = Frame(self.master)
@@ -133,6 +142,7 @@ class Main:
 
         # Functions
         display_books(self)
+        display_statistics(self)
 
     def add_book(self):
         new_book = add_book.AddBook()
@@ -162,6 +172,7 @@ class Main:
         for book in res_books:
             self.list_books.insert(counter, str(book[0]) + '-' + book[1])
             counter += 1
+
 
 
 def main():
