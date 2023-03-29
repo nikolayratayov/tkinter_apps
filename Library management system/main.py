@@ -1,7 +1,8 @@
 from tkinter import *
 from tkinter import ttk
 import sqlite3
-import add_book, add_member
+import add_book, add_member, give_book
+from tkinter import messagebox
 
 
 con = sqlite3.connect('library.db')
@@ -34,7 +35,7 @@ class GiveBook(Toplevel):
         self.top_image = PhotoImage(file='icons/addperson.png')
         top_image_lbl = Label(self.top_frame, image=self.top_image, bg='white')
         top_image_lbl.place(x=120, y=10)
-        heading = Label(self.top_frame, text='   Add book ', font='arial 22 bold', fg='#003f8a', bg='white')
+        heading = Label(self.top_frame, text='   Give book ', font='arial 22 bold', fg='#003f8a', bg='white')
         heading.place(x=290, y=60)
 
         # Entries and labels
@@ -56,9 +57,24 @@ class GiveBook(Toplevel):
         self.combo_member.place(x=190, y=85)
 
         # Button
-        button = Button(self.bottom_frame, text='Give book')
+        button = Button(self.bottom_frame, text='Give book', command=self.lend_book)
         button.place(x=255, y=120)
 
+    def lend_book(self):
+        book_name = self.book_name.get()
+        member_name = self.member_name.get()
+        if book_name and member_name:
+            try:
+                query = 'INSERT INTO borrows (bor_book_id, bor_member_id) VALUES(?, ?)'
+                cur.execute(query, (book_name, member_name))
+                con.commit()
+                messagebox.showinfo('Succes', 'Success!')
+                cur.execute('UPDATE books SET book_status=? WHERE book_id=?', (1, self.book_id))
+                con.commit()
+            except:
+                messagebox.showerror('Error', 'Something went wrong!')
+        else:
+            messagebox.showerror('Error', 'Fields can\'t be empty!')
 
 class Main:
     def __init__(self, master):
@@ -168,7 +184,7 @@ class Main:
         self.btn_member.pack(side=LEFT)
         # give book
         self.icon_give = PhotoImage(file='icons/givebook.png')
-        self.btn_give = Button(top_frame, text='Give Book', image=self.icon_give, compound=LEFT, font='arial 12 bold')
+        self.btn_give = Button(top_frame, text='Give Book', image=self.icon_give, compound=LEFT, font='arial 12 bold', command=self.give_book)
         self.btn_give.pack(side=LEFT)
 
         # Tabs
@@ -235,6 +251,8 @@ class Main:
             self.list_books.insert(counter, str(book[0]) + '-' + book[1])
             counter += 1
 
+    def give_book(self):
+        give_book_instance = give_book.GiveBook()
 
 
 def main():
