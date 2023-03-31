@@ -1,5 +1,17 @@
 from tkinter import *
 from tkinter import ttk
+from tkinter import filedialog
+
+
+def add_song():
+    song = filedialog.askopenfilename(initialdir='audio/', title='Choose a song', filetypes=(('mp3 Files', '*.mp3'),))
+    song = song.replace('D:/GitHub/tkinter_apps/MP3 Player/audio/', '')
+    song = song.replace('.mp3', '')
+    playlist_box.insert(END, song)
+
+
+def add_many_songs():
+    pass
 
 
 root = Tk()
@@ -29,5 +41,14 @@ pause_button = ttk.Button(control_frame, image=pause_image)
 pause_button.grid(row=0, column=3, padx=10)
 stop_button = ttk.Button(control_frame, image=stop_image)
 stop_button.grid(row=0, column=4, padx=10)
+
+my_menu = Menu(root)
+root.config(menu=my_menu)
+
+add_song_menu = Menu(my_menu, tearoff=0)
+my_menu.add_cascade(label='Add Songs', menu=add_song_menu)
+add_song_menu.add_command(label='Add one song to playlist', command=add_song)
+add_song_menu.add_command(label='Add many song to playlist', command=add_many_songs)
+
 
 root.mainloop()
