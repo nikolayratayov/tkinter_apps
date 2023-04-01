@@ -11,14 +11,26 @@ def add_song():
 
 
 def add_many_songs():
-    pass
+    songs = filedialog.askopenfilenames(initialdir='audio/', title='Choose a song', filetypes=(('mp3 Files', '*.mp3'),))
+    songs = [song.replace('D:/GitHub/tkinter_apps/MP3 Player/audio/', '') for song in songs]
+    songs = [song.replace('.mp3', '') for song in songs]
+    for i in songs:
+        playlist_box.insert(END, i)
+
+
+def delete_song():
+    playlist_box.delete(ANCHOR)
+
+
+def delete_all_songs():
+    playlist_box.delete(0, END)
 
 
 root = Tk()
 root.title('MP3 Player')
 root.geometry('500x400+500+100')
 
-playlist_box = Listbox(root, bg='black', fg='green', width=60)
+playlist_box = Listbox(root, bg='black', fg='green', width=60, selectbackground='green', selectforeground='black')
 playlist_box.pack(pady=20)
 
 control_frame = ttk.Frame(root)
@@ -49,6 +61,11 @@ add_song_menu = Menu(my_menu, tearoff=0)
 my_menu.add_cascade(label='Add Songs', menu=add_song_menu)
 add_song_menu.add_command(label='Add one song to playlist', command=add_song)
 add_song_menu.add_command(label='Add many song to playlist', command=add_many_songs)
+
+remove_song_menu = Menu(my_menu, tearoff=0)
+my_menu.add_cascade(label='Remove songs', menu=remove_song_menu)
+remove_song_menu.add_command(label='Delete song from playlist', command=delete_song)
+remove_song_menu.add_command(label='Delete all songs from playlist', command=delete_all_songs)
 
 
 root.mainloop()
