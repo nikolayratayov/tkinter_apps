@@ -31,7 +31,7 @@ def delete_all_songs():
 
 
 def play():
-    song = playlist_box.get(ACTIVE)
+    song = playlist_box.get(playlist_box.curselection())
     song = f'D:/GitHub/tkinter_apps/MP3 Player/audio/{song}.mp3'
     pygame.mixer.music.load(song)
     pygame.mixer.music.play(loops=0)
@@ -50,6 +50,32 @@ def pause(is_paused):
     else:
         paused = True
         pygame.mixer.music.pause()
+
+
+def next_song():
+    next = playlist_box.curselection()
+    if next:
+        next = next[0] + 1
+        if next == playlist_box.size():
+            next = 0
+    else:
+        next = 0
+    playlist_box.selection_clear(0, END)
+    playlist_box.selection_set(next)
+    play()
+
+
+def previous_song():
+    previous = playlist_box.curselection()
+    if previous:
+        previous = previous[0] - 1
+        if previous == -1:
+            previous = playlist_box.size() - 1
+    else:
+        previous = playlist_box.size() - 1
+    playlist_box.selection_clear(0, END)
+    playlist_box.selection_set(previous)
+    play()
 
 
 paused = False
@@ -71,9 +97,9 @@ pause_image = PhotoImage(file='images/pause50.png')
 stop_image = PhotoImage(file='images/stop50.png')
 
 
-back_button = ttk.Button(control_frame, image=back_image)
+back_button = ttk.Button(control_frame, image=back_image, command=previous_song)
 back_button.grid(row=0, column=0, padx=10)
-forward_button = ttk.Button(control_frame, image=forward_image)
+forward_button = ttk.Button(control_frame, image=forward_image, command=next_song)
 forward_button.grid(row=0, column=1, padx=10)
 play_button = ttk.Button(control_frame, image=play_image, command=play)
 play_button.grid(row=0, column=2, padx=10)
