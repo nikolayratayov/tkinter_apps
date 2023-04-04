@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog
 import pygame
+import time
 
 
 pygame.mixer.init()
@@ -35,6 +36,7 @@ def play():
     song = f'D:/GitHub/tkinter_apps/MP3 Player/audio/{song}.mp3'
     pygame.mixer.music.load(song)
     pygame.mixer.music.play(loops=0)
+    play_time()
 
 
 def stop():
@@ -76,6 +78,13 @@ def previous_song():
     playlist_box.selection_clear(0, END)
     playlist_box.selection_set(previous)
     play()
+
+
+def play_time():
+    current_time = pygame.mixer.music.get_pos() / 1000
+    converted_current_time = time.strftime('%M:%S', time.gmtime(current_time))
+    status_bar.config(text=f'Time elapsed: {converted_current_time}')
+    status_bar.after(1000, play_time)
 
 
 paused = False
@@ -120,6 +129,9 @@ remove_song_menu = Menu(my_menu, tearoff=0)
 my_menu.add_cascade(label='Remove songs', menu=remove_song_menu)
 remove_song_menu.add_command(label='Delete song from playlist', command=delete_song)
 remove_song_menu.add_command(label='Delete all songs from playlist', command=delete_all_songs)
+
+status_bar = ttk.Label(root, text='', border=1, relief=GROOVE, anchor=E)
+status_bar.pack(fil=X, side=BOTTOM, ipady=2)
 
 
 root.mainloop()
