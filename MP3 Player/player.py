@@ -3,6 +3,7 @@ from tkinter import ttk
 from tkinter import filedialog
 import pygame
 import time
+from mutagen.mp3 import MP3
 
 
 pygame.mixer.init()
@@ -41,6 +42,7 @@ def play():
 
 def stop():
     pygame.mixer.music.stop()
+    status_bar.config(text=f'')
 
 
 def pause(is_paused):
@@ -83,8 +85,19 @@ def previous_song():
 def play_time():
     current_time = pygame.mixer.music.get_pos() / 1000
     converted_current_time = time.strftime('%M:%S', time.gmtime(current_time))
-    status_bar.config(text=f'Time elapsed: {converted_current_time}')
+    song = playlist_box.get(playlist_box.curselection())
+    song = f'D:/GitHub/tkinter_apps/MP3 Player/audio/{song}.mp3'
+    song_mut = MP3(song)
+    global song_length
+    song_length = song_mut.info.length
+    converted_song_length = time.strftime('%M:%S', time.gmtime(song_length))
+    if current_time >= 1:
+        status_bar.config(text=f'Time elapsed: {converted_current_time} of {converted_song_length}  ')
     status_bar.after(1000, play_time)
+
+
+def volume(x):
+    pygame.mixer.music.set_volume(volume_slide.get())
 
 
 paused = False
@@ -93,11 +106,19 @@ root = Tk()
 root.title('MP3 Player')
 root.geometry('500x400+500+100')
 
-playlist_box = Listbox(root, bg='black', fg='green', width=60, selectbackground='green', selectforeground='black')
-playlist_box.pack(pady=20)
+main_frame = ttk.Frame(root)
+main_frame.pack(pady=20)
 
-control_frame = ttk.Frame(root)
-control_frame.pack(pady=20)
+playlist_box = Listbox(main_frame, bg='black', fg='green', width=60, selectbackground='green', selectforeground='black')
+playlist_box.grid(row=0, column=0)
+
+volume_frame = ttk.LabelFrame(main_frame, text='Volume')
+volume_frame.grid(row=0, column=1, padx=10)
+volume_slide = ttk.Scale(volume_frame, from_=1, to=0, orient=VERTICAL, length=125, command=volume, value=1)
+volume_slide.pack(pady=10)
+
+control_frame = ttk.Frame(main_frame)
+control_frame.grid(row=1, column=0, pady=20)
 
 back_image = PhotoImage(file='images/back50.png')
 forward_image = PhotoImage(file='images/forward50.png')
