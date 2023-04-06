@@ -91,6 +91,12 @@ def play_time():
     global song_length
     song_length = song_mut.info.length
     converted_song_length = time.strftime('%M:%S', time.gmtime(song_length))
+
+    song_slider.config(to=song_length)
+    if not paused:
+        next_time = int(song_slider.get()) + 1
+        song_slider.config(value=next_time)
+
     if current_time >= 1:
         status_bar.config(text=f'Time elapsed: {converted_current_time} of {converted_song_length}  ')
     status_bar.after(1000, play_time)
@@ -98,6 +104,10 @@ def play_time():
 
 def volume(x):
     pygame.mixer.music.set_volume(volume_slide.get())
+
+
+def slide(x):
+    pass
 
 
 paused = False
@@ -116,6 +126,9 @@ volume_frame = ttk.LabelFrame(main_frame, text='Volume')
 volume_frame.grid(row=0, column=1, padx=10)
 volume_slide = ttk.Scale(volume_frame, from_=1, to=0, orient=VERTICAL, length=125, command=volume, value=1)
 volume_slide.pack(pady=10)
+
+song_slider = ttk.Scale(main_frame, from_=0, to=100, orient=HORIZONTAL, length=360, command=slide, value=0)
+song_slider.grid(row=2, column=0, pady=20)
 
 control_frame = ttk.Frame(main_frame)
 control_frame.grid(row=1, column=0, pady=20)
