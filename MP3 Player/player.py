@@ -33,6 +33,8 @@ def delete_all_songs():
 
 
 def play():
+    global stopped
+    stopped = False
     song = playlist_box.get(playlist_box.curselection())
     song = f'D:/GitHub/tkinter_apps/MP3 Player/audio/{song}.mp3'
     pygame.mixer.music.load(song)
@@ -40,9 +42,15 @@ def play():
     play_time()
 
 
+global stopped
+stopped = False
+
+
 def stop():
     pygame.mixer.music.stop()
     status_bar.config(text=f'')
+    global stopped
+    stopped = True
 
 
 def pause(is_paused):
@@ -83,6 +91,8 @@ def previous_song():
 
 
 def play_time():
+    if stopped:
+        return
     current_time = pygame.mixer.music.get_pos() / 1000
     converted_current_time = time.strftime('%M:%S', time.gmtime(current_time))
     song = playlist_box.get(playlist_box.curselection())
