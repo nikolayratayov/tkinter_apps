@@ -65,6 +65,9 @@ def pause(is_paused):
 
 
 def next_song():
+    status_bar.config(text='')
+    song_slider.config(value=0)
+
     next = playlist_box.curselection()
     if next:
         next = next[0] + 1
@@ -78,6 +81,9 @@ def next_song():
 
 
 def previous_song():
+    status_bar.config(text='')
+    song_slider.config(value=0)
+
     previous = playlist_box.curselection()
     if previous:
         previous = previous[0] - 1
