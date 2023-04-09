@@ -108,10 +108,9 @@ def play_time():
     song_length = song_mut.info.length
     converted_song_length = time.strftime('%M:%S', time.gmtime(song_length))
 
-    song_slider.config(to=song_length)
     if not paused:
         next_time = int(song_slider.get()) + 1
-        song_slider.config(value=next_time)
+        song_slider.config(to=song_length, value=next_time)
 
     if current_time >= 1:
         status_bar.config(text=f'Time elapsed: {converted_current_time} of {converted_song_length}  ')
@@ -123,7 +122,10 @@ def volume(x):
 
 
 def slide(x):
-    pass
+    song = playlist_box.get(playlist_box.curselection())
+    song = f'D:/GitHub/tkinter_apps/MP3 Player/audio/{song}.mp3'
+    pygame.mixer.music.load(song)
+    pygame.mixer.music.play(loops=0, start=song_slider.get())
 
 
 paused = False
