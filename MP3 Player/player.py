@@ -108,9 +108,13 @@ def play_time():
     song_length = song_mut.info.length
     converted_song_length = time.strftime('%M:%S', time.gmtime(song_length))
 
-    if not paused:
+    if int(song_slider.get()) == int(song_length):
+        stop()
+    elif not paused:
         next_time = int(song_slider.get()) + 1
         song_slider.config(to=song_length, value=next_time)
+        converted_current_time = time.strftime('%M:%S', time.gmtime(int(song_slider.get())))
+        status_bar.config(text=f'Time elapsed: {converted_current_time} of {converted_song_length}  ')
 
     if current_time >= 1:
         status_bar.config(text=f'Time elapsed: {converted_current_time} of {converted_song_length}  ')
