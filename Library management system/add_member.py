@@ -24,7 +24,7 @@ class AddMember(Toplevel):
         self.top_image = PhotoImage(file='icons/addperson.png')
         top_image_lbl = Label(self.top_frame, image=self.top_image, bg='white')
         top_image_lbl.place(x=120, y=10)
-        heading = Label(self.top_frame, text='   Add book ', font='arial 22 bold', fg='#003f8a', bg='white')
+        heading = Label(self.top_frame, text='   Add member ', font='arial 22 bold', fg='#003f8a', bg='white')
         heading.place(x=290, y=60)
 
         # Entries and labels
