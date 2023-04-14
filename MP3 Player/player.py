@@ -33,13 +33,17 @@ def delete_all_songs():
 
 
 def play():
+    song_slider.config(value=0)
     global stopped
     stopped = False
+    global paused
+    paused = False
     song = playlist_box.get(playlist_box.curselection())
     song = f'D:/GitHub/tkinter_apps/MP3 Player/audio/{song}.mp3'
     pygame.mixer.music.load(song)
     pygame.mixer.music.play(loops=0)
-    play_time()
+    if not is_play_time_running:
+        play_time()
 
 
 global stopped
@@ -47,6 +51,7 @@ stopped = False
 
 
 def stop():
+    song_slider.config(value=0)
     pygame.mixer.music.stop()
     status_bar.config(text=f'')
     global stopped
@@ -59,9 +64,11 @@ def pause(is_paused):
     if paused:
         paused = False
         pygame.mixer.music.unpause()
+        play_time()
     else:
         paused = True
         pygame.mixer.music.pause()
+        play_time()
 
 
 def next_song():
@@ -96,8 +103,12 @@ def previous_song():
     play()
 
 
+is_play_time_running = False
 def play_time():
+    global is_play_time_running
+    is_play_time_running = True
     if stopped:
+        is_play_time_running = False
         return
     current_time = pygame.mixer.music.get_pos() / 1000
     converted_current_time = time.strftime('%M:%S', time.gmtime(current_time))
@@ -115,6 +126,11 @@ def play_time():
         song_slider.config(to=song_length, value=next_time)
         converted_current_time = time.strftime('%M:%S', time.gmtime(int(song_slider.get())))
         status_bar.config(text=f'Time elapsed: {converted_current_time} of {converted_song_length}  ')
+    else:
+        converted_current_time = time.strftime('%M:%S', time.gmtime(int(song_slider.get())))
+        status_bar.config(text=f'Time elapsed: {converted_current_time} of {converted_song_length}  ')
+        is_play_time_running = False
+        return
 
     if current_time >= 1:
         status_bar.config(text=f'Time elapsed: {converted_current_time} of {converted_song_length}  ')
